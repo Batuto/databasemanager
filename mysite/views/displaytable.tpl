@@ -1,5 +1,5 @@
 %rebase ./mysite/views/menu.tpl title="DataBase - Products"
-
+%#-*-coding:utf-8-*-
 <div class="row">
  <div class="col-lg-12">
 
@@ -35,32 +35,40 @@
 <div class="container-fluid navbar">
     
     <div class="row">
-        <form method="POST">
+        <form method="POST" id="model">
             <div class="col-lg-4">
-            
+            % u = 0
             %for algo in data:
                 %if algo != "Perishable":
                     %type = "text"
                 %else:
-                %type = "checkbox"
+                    %type = "checkbox"
                 %end
+
 
                 %if algo == "Id":
                     %X = "hidden"
                     %algo = ""
                 %else:
-                %X = ""
+                    %X = ""
                 %end
 
+
+            %value = rows[count][u]
+
+            %#if value == True:
+                %#value = "checked"
+            %#end 
 
                 <div class="form-group">
 
                 {{algo}}
                 <p>&#9;</p>
-                <input type="{{type}}" name={{algo}} value="" {{X}}>
+                <input type="{{type}}" name={{algo}} value="{{value}}" {{X}}>
                 
                 <br>
                 </div>
+                %u += 1
              %end
             <button type="submit" class="btn btn-default">Guardar</button>
          </div>
@@ -70,6 +78,23 @@
                 </div>
           </div>
           <div class="col-lg-4">
+
+             <form method="POST">
+                <button class="btn btn-default" type="submit">Anterior</button>
+                <input type="text" name="Anterior" value="Anterior" class="hidden">
+            </form>
+
+             <form method="POST">
+                <button class="btn btn-default" type="submit">Siguiente</button>
+                <input type="text" name="Siguiente" value="Siguiente" class="hidden">
+            </form>
+
+            <form method="POST">
+                <button class="btn btn-default" type="submit" form="model">Modificar</button>
+                <input type="text" name="Modificar" value="Modificar" form="model" class="hidden">
+            </form>
+
+          
            </div>
         </form>
     </div>  
@@ -78,14 +103,7 @@
         <a class="btn btn-default" href="/menu" role="button">Cancelar</a>
         </div>
         <div class="col-lg-4">
-            <form method="POST">
-                <button class="btn btn-default" type="submit">Anterior</button>
-                <input type="checkbox" name="Anterior" checked="checked" disabled class="hidden">
-            </form>
-            <form method="POST">
-                <button class="btn btn-default" type="submit">Siguiente</button>
-                <input type="checkbox" name="Siguiente" checked="checked" disabled class="hidden">
-            </form>
+           
         </div>
         <div class="col-lg-2">
         </div>
