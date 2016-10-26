@@ -1,53 +1,44 @@
 %rebase ./mysite/views/menu.tpl title="DataBase - Products"
-%#-*-coding:utf-8-*-
-<div class="row">
- <div class="col-lg-12">
 
-        %if rows:
-        <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">{{name}}</div>
-        <table class="table">
-        %for row in rows:
-            <tr>
-            %for x in row:
-                <td>
-                {{x}}
-                </td>
-            %end
-                <td>
-            <a href="/{{path}}/{{row[1]}}">
-            <span class=""><p>Editar</p></span>
-            </a>
-                </td>
-            </tr>
-        %end  # End For
-        </table>
-        </div>
-        </div>
-
-        %else:
-            <div class="text-center">
-            <h3>Tabla Sin Datos</h3>
-            </div>
-        %end # End Else/IF
-        
-
-
- </div>
-</div>
-%# """
-<!--
 <div class="container-fluid navbar">
     
-    <div class="row">
-        <form method="POST" id="model" action="/{{path}}/guardar">
-            <div class="col-lg-4">
-            % u = 0
-            %for algo in data:
-                %if algo != "Perishable":
+     <div class="row">
+            <form method="POST" id="model" action="/guardar/{{path}}/{{row[0][1]}}">
+                <div class="col-lg-4">
+                    
+                    <div class="form-group">
+                    
+
+                      %valx = row[0]
+                      %for idx, campo in enumerate(data):
+                      %in_type = "text"
+                      %field_value = valx[idx]
+                      %print type(field_value)
+                      %if isinstance(field_value, bool):
+                      %in_type = "checkbox"
+            
+                      %end  # if
+
+                  {{campo}}
+                  <br><!--p>&#9;</p-->
+                  <input type={{in_type}} name="{{campo}}" value={{field_value}} {{'checked = "checked"' if field_value else ''}}>
+                  <br><br><br>
+            
+                       %end
+                    </div>
+
+
+
+
+
+
+
+                %"""
+                % u = 0
+              %for algo in data:
+                  %if algo != "Perishable":
                     %type = "text"
-                %else:
+                   %else:
                     %type = "checkbox"
                 %end
 
@@ -61,7 +52,7 @@
 
 
         
-                %value = rows[count][u]
+                %value = row[u]
 
                 %#if value == True:
                     %#value = "checked"
@@ -77,6 +68,8 @@
                 </div>
                 %u += 1
              %end  # end For
+             %"""
+            <br>
             <button type="submit" class="btn btn-default">Guardar</button>
         </form>
          </div>
@@ -97,7 +90,7 @@
                 <input type="text" name="Siguiente" value="Siguiente" class="hidden">
             </form>
 
-            <form method="POST" action="/product/modificar">
+            <form method="POST" action="/{{path}}/modificar">
                 <button class="btn btn-default" type="submit" form="model">Modificar</button>
                 <input type="text" name="Modificar" value="Modificar" form="model" class="hidden">
                 <input type="text" name="comes_from" value="modificar" class="hidden">
@@ -106,16 +99,6 @@
           
            </div>
     </div>  
-    <div class="row">
-        <div class="col-lg-6">
-        <a class="btn btn-default" href="/menu" role="button">Cancelar</a>
-        </div>
-        <div class="col-lg-4">
-           
-        </div>
-        <div class="col-lg-2">
-        </div>
-    </div>  
+    
 </div>
--->
-%# """
+</div>
