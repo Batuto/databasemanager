@@ -8,6 +8,7 @@ basedatos = QueryModel("store", "batuto", "123qwe...")
 dataproduct = ("Kind", "Id", "Name", "Perishable", "Description", "Price")
 datapurchase = ""#("Id", "TimeStamp", "Employee_Id", "Total", "Supplier_Id")
 datasupplier = ("Name", "RFC", "Phone", "Address", "Email")
+datastore = ("Id", "Lot", "Quantity", "ExpDate" "SupplierId")
 
 get_names = basedatos.somequery("select column_name from information_schema.columns where table_name = 'product';")
 column_headers = [element[0] for element in get_names]
@@ -93,6 +94,8 @@ def nuevo(path):
         data = dataproduct
     if path == "supplier":
         data = datasupplier
+    if path == "store":
+        data = datastore
     return template("./mysite/views/new_record.tpl", data = data, path = path)
 
 @route("/nuevo/product", method = "POST")
@@ -104,7 +107,7 @@ def nuevo_p():
     perishable = bool(request.forms.get("Perishable", False))
     description = request.forms.get("Description")
     price = request.forms.get("Price")
-    basedatos.create("product", ("kind","product_name","perishable","description","price"), (kind,name,perishable,description,price))
+    basedatos.create("product", ("kind","product_name","perishable","description","price"), (kind, name, perishable, description, price))
     basedatos.commitq()
     redirect("/product")
 
@@ -115,13 +118,42 @@ def purchase():
     print rows
     return template("./mysite/views/displaytable.tpl", rows=rows, name="Purchase Table", data = datapurchase)
 
-
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+# STORE
 @route("/store")
 def store():
+    global datastore
     rows = basedatos.somequery("SELECT * FROM store;")
     
-    return template("./mysite/views/displaytable.tpl", rows=rows, name="Store Table")
+    return template("./mysite/views/displaytable.tpl", rows=rows, name="Store Table", data = datastore, path="store")
 
+@route("/nuevo/store", method = "POST")
+def nuevo_ss():
+    product_id = request.forms.get("Id")
+    lot = request.forms.get("Lot")
+    quantity = request.forms.get("Quantity")
+    expiration_date = request.forms.get("ExpDate")
+    supplier_id = request.forms.get("SupplierId")
+    basedatos.create("store", ("product_id", "lot","quantity", "expiration_date","supplier_id"), (product, lot, quantity, expiration_date, supplier))
+    basedatos.commitq()
+    redirect("/supplier")    
+
+@route("/modificar/store/<id>")
+def item(id):
+    model = "store"
+    query = "SELECT * FROM {0} WHERE lot = '{1}' ;".format(model, id)
+    row = basedatos.somequery(query)
+    get_names = "select column_name,data_type from information_schema.columns where table_name = '{0}';".format(model)
+    return template("./mysite/views/record.tpl", row = row, data = datastore, path = model)
+
+@route("/borrar/store/<id>", method = "POST")
+def borrarD(id):
+    field_equ = "lot = '{0}'".format(id)
+    basedatos.delete("store", field_equ)
+    basedatos.commitq()
+    redirect("/store")
+
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 # SUPPLIER
@@ -162,6 +194,14 @@ def item(id):
     row = basedatos.somequery(query)
     get_names = "select column_name,data_type from information_schema.columns where table_name = '{0}';".format(model)
     return template("./mysite/views/record.tpl", row = row, data = datasupplier, path = model)
+
+@route("/borrar/supplier/<id>", method = "POST")
+def borrarD(id):
+    field_equ = "rfc = '{0}'".format(id)
+    basedatos.delete("supplier", field_equ)
+    basedatos.commitq()
+    redirect("/supplier")
+
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
 
