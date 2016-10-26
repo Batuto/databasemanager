@@ -22,8 +22,7 @@
                   {{campo}}
                   <br><!--p>&#9;</p-->
                   <input type={{in_type}} name="{{campo}}" value={{field_value}} {{'checked = "checked"' if field_value else ''}}>
-                  <br><br><br>
-            
+                  <br><br>
                        %end
                     </div>
 
@@ -69,15 +68,22 @@
                 %u += 1
              %end  # end For
              %"""
+
+
             <br>
             <button type="submit" class="btn btn-default">Guardar</button>
         </form>
          </div>
          <div class="col-lg-4">
-             <div class="checkbox">
-                  <label><input type="checkbox" name="Insertar" form="model"> Guardar en tabla.</label>
-                </div>
+            <form method="POST" action="/borrar/{{path}}/{{row[0][1]}}">
+               <button class="btn btn-default" type="submit">Borrar</button>
+                <input type="text" name="Borrar" value="Borrar" class="hidden">
+                <input type="text" name="comes_from" value="modificar" class="hidden">
+            </form>  
+
+
           </div>
+
           <div class="col-lg-4">
 
              <form method="POST">
@@ -88,12 +94,6 @@
              <form method="POST">
                 <button class="btn btn-default" type="submit">Siguiente</button>
                 <input type="text" name="Siguiente" value="Siguiente" class="hidden">
-            </form>
-
-            <form method="POST" action="/{{path}}/modificar">
-                <button class="btn btn-default" type="submit" form="model">Modificar</button>
-                <input type="text" name="Modificar" value="Modificar" form="model" class="hidden">
-                <input type="text" name="comes_from" value="modificar" class="hidden">
             </form>
 
           

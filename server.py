@@ -6,6 +6,7 @@ visual = True
 basedatos = QueryModel("store", "batuto", "123qwe...")
 
 dataproduct = ("Kind", "Id", "Name", "Perishable", "Description", "Price")
+
 get_names = basedatos.somequery("select column_name from information_schema.columns where table_name = 'product';")
 column_headers = [element[0] for element in get_names]
 print column_headers
@@ -55,7 +56,7 @@ def product():
     #print rows
     return template("./mysite/views/displaytable.tpl", rows=rows, name="Product Table", data=dataproduct, path="product", count=count, visual=visual)
 
-@route("/<model>/<id>")
+@route("/modificar/<model>/<id>")
 def item(model, id):
     query = "SELECT * FROM {0} WHERE {0}_id = {1} ;".format(model, id)
     print query
@@ -73,7 +74,7 @@ def guardar(model, id):
     query = ["{} = {}".format(k, request.forms.get(k)) for k in request.forms.iterkeys()]
     print query"""
 
-@route("/guardar/product/<id>", method="POST")
+@route("/guardar/product/<id>", method = "POST")
 def guardarD(id):
 
     kind = request.forms.get("Kind")
@@ -86,14 +87,27 @@ def guardarD(id):
     valores = "kind = {0}, product_name = '{1}', perishable = {2}, description = '{3}', price = {4} WHERE product_id={5}".format(kind, name, perishable, description, price, id)
     basedatos.edit("product", valores)
     basedatos.commitq()
-    redirect("/product/{}".format(id))
-
+    redirect("/product")
     #print request.forms
     #print request.forms
     #query = ["{} = {}".format(k, request.forms.get(k)) for k in request.forms.iterkeys()]
     #print query
 
+@route("/borrar/product/<id>", method = "POST")
+def borrarD(id):
+    field_equ = "product_id = {0}".format(id)
+    basedatos.delete("product", field_equ)
+    basedatos.commitq()
+    redirect("/product")
 
+@route("/nuevo/<path>")
+def nuevo(path):
+    global dataproduct
+    
+    if path == "product":
+        data = dataproduct
+
+    return template("./mysite/views/new_record.tpl", data = data, path = path)
 
 
 
@@ -115,7 +129,7 @@ def productDS():
         basedatos.commitq()
     redirect("/product")
 
-@route("/product/modificar", method="POST")
+"""@route("/product/modificar", method="POST")
 def productDM():
     global count
     print request.forms.get("Modificar")
@@ -161,7 +175,7 @@ def productD():
     #
     redirect("/product")
         
-
+"""
 
 @route("/purchase")
 def purchase():

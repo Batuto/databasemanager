@@ -16,7 +16,7 @@
                 </td>
             %end
                 <td>
-            <a href="/{{path}}/{{row[1]}}">
+            <a href="/modificar/{{path}}/{{row[1]}}">
             <span class=""><p>Editar</p></span>
             </a>
                 </td>
@@ -36,6 +36,17 @@
 
  </div>
 </div>
+<div class="row">
+    <div class="col-lg-3">
+    <a class="btn btn-default" href="/nuevo/{{path}}" role="button">Nuevo</a>
+        
+    </div>
+    <div class="col-lg-9">
+    
+        
+    </div>
+</div>
+
 %# """
 <!--
 <div class="container-fluid navbar">
